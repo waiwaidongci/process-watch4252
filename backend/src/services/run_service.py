@@ -26,5 +26,5 @@ def export_run(db,rid):
     if not db.query(Investigation).filter_by(run_id=rid,status="approved").first():raise HTTPException(403,"调查尚未经负责人批准，不能导出")
     out=io.StringIO();writer=csv.writer(out)
     writer.writerow(['sequence','time','thickness','moving_range','ewma','ewma_lower','ewma_upper','signals','input_hash'])
-    for p in row.result['points']:writer.writerow([p['sequence'],p['measured_at'],p['value'],p['moving_range'],p['ewma'],p['ewma_lower'],p['ewma_upper'],'|'.join(p['signals']),row.result['input_hash']])
+    for p in row.result['points']:writer.writerow([p['sequence'],p['measured_at'],p['value'],'' if p['moving_range'] is None else p['moving_range'],p['ewma'],p['ewma_lower'],p['ewma_upper'],'|'.join(p['signals']),row.result['input_hash']])
     return out.getvalue()
